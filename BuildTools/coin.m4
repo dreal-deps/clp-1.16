@@ -2,7 +2,7 @@
 # All Rights Reserved.
 # This file is distributed under the Eclipse Public License.
 #
-## $Id: coin.m4 3279 2015-01-16 16:09:37Z tkr $
+## $Id: coin.m4 3479 2015-03-19 04:49:11Z tkr $
 #
 # Author: Andreas Wachter    IBM      2006-04-14
 
@@ -1548,7 +1548,7 @@ else
             AC_MSG_NOTICE([Building of DLLs not supported in this configuration.])
             ;;
           *gcc*)
-	    if test x"$enable_dependency_linking" = xyes; then
+            if test x"$enable_dependency_linking" = xyes; then
               coin_disable_shared=no
             else
               AC_MSG_WARN([Dependency linking seems to be disabled, so shared libraries (DLLs) will not be built])
@@ -1659,28 +1659,30 @@ fi
 
 # AC_MSG_NOTICE([End of INIT_AUTO_TOOLS.])
 
-AC_ARG_ENABLE([dependency-linking],[],
+AC_ARG_ENABLE([dependency-linking],
+  [AC_HELP_STRING([--disable-dependency-linking],
+                  [disable linking library dependencies into shared libraries])],
   [dependency_linking="$enableval"],
   [dependency_linking=auto])
 
 if test "$dependency_linking" = auto; then
   # On Cygwin and AIX, building DLLs doesn't work
   dependency_linking=no
-  if test x"$enable_shared" = xyes; then
+  if test x"$coin_disable_shared" = xno; then
     case $build in
       *-cygwin* | *-mingw*)
         case "$CC" in
           clang* )
-	    dependency_linking=yes
+            dependency_linking=yes
             ;;
           cl* | */cl* | CL* | */CL* | icl* | */icl* | ICL* | */ICL*)
-	    dependency_linking=no
+            dependency_linking=no
             ;;
           *gcc*)
-	    dependency_linking=yes
+            dependency_linking=yes
             ;;
           *)
-	    dependency_linking=yes
+            dependency_linking=yes
             ;;
         esac
         ;;
@@ -2913,6 +2915,7 @@ AC_MSG_NOTICE([configuring doxygen documentation options])
 # Check to see if doxygen is available.
 
 AC_CHECK_PROG([coin_have_doxygen],[doxygen],[yes],[no])
+AC_CHECK_PROG([coin_have_latex],[latex],[yes],[no])
 
 # Look for the dot tool from the graphviz package, unless the user has
 # disabled it.
@@ -2934,6 +2937,8 @@ fi
 
 AC_SUBST([coin_doxy_tagname],[doxydoc/${PACKAGE}_doxy.tag])
 AC_SUBST([coin_doxy_logname],[doxydoc/${PACKAGE}_doxy.log])
+AM_CONDITIONAL(COIN_HAS_DOXYGEN, [test $coin_have_doxygen = yes])
+AM_CONDITIONAL(COIN_HAS_LATEX, [test $coin_have_latex = yes])
 
 # Process the list of project names and massage them into possible doxygen
 # doc'n directories. Prefer 1) classic external, source processed using
@@ -2953,30 +2958,26 @@ for proj in $tmp ; do
   AC_MSG_CHECKING([for doxygen doc'n for $proj ])
   doxytag=${lc_proj}_doxy.tag
   doxyfound=no
-  for chkProj in $coin_subdirs ; do
-    if test "$chkProj" = "$proj" ; then
-      # proj will be configured, hence doxydoc present in build tree
-      doxysrcdir="${srcdir}/${proj}"
-      # AC_MSG_NOTICE([Considering $doxysrcdir (base)])
-      if test -d "$doxysrcdir" ; then
-	# with a doxydoc directory?
-	doxydir="$doxysrcdir/doxydoc"
-	# AC_MSG_NOTICE([Considering $doxydir (base)])
-	# AC_MSG_NOTICE([Subdirs: $coin_subdirs)])
-	if test -d "$doxydir" ; then
-	  # use tag file; don't process source
-	  eval doxydir="`pwd`/${proj}/doxydoc"
-	  coin_doxy_tagfiles="$coin_doxy_tagfiles $doxydir/$doxytag=$doxydir/html"
-	  AC_MSG_RESULT([$doxydir (tag)])
-	  coin_doxy_excludes="$coin_doxy_excludes */${proj}"
-	else
-	  # will process the source -- nothing further to be done here
-	  AC_MSG_RESULT([$doxysrcdir (src)])
-	fi
-	doxyfound=yes
-      fi
+  # proj will be configured, hence doxydoc present in build tree
+  doxysrcdir="${srcdir}/../${proj}"
+  # AC_MSG_NOTICE([Considering $doxysrcdir (base)])
+  if test -d "$doxysrcdir" ; then
+    # with a doxydoc directory?
+    doxydir="$doxysrcdir/doxydoc"
+    # AC_MSG_NOTICE([Considering $doxydir (base)])
+    # AC_MSG_NOTICE([Subdirs: $coin_subdirs)])
+    if test -d "$doxydir" ; then
+      # use tag file; don't process source
+      doxydir="../${proj}/doxydoc"
+      coin_doxy_tagfiles="$coin_doxy_tagfiles $doxydir/$doxytag=../../$doxydir/html"
+      AC_MSG_RESULT([$doxydir (tag)])
+      coin_doxy_excludes="$coin_doxy_excludes */${proj}"
+    else
+      # will process the source -- nothing further to be done here
+      AC_MSG_RESULT([$doxysrcdir (src)])
     fi
-  done
+    doxyfound=yes
+  fi
   # Not built, fall back to installed tag file
   if test $doxyfound = no ; then
     eval doxydir="${datadir}/coin/doc/${proj}/doxydoc"

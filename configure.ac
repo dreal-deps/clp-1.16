@@ -2,7 +2,7 @@
 # All Rights Reserved.
 # This file is distributed under the Eclipse Public License.
 
-## $Id: configure.ac 2098 2015-01-19 00:00:38Z tkr $
+## $Id: configure.ac 2136 2015-03-30 00:05:14Z tkr $
 
 # Author:  Andreas Waechter            IBM    2006-04-13
 
@@ -12,7 +12,7 @@
 
 AC_PREREQ(2.59)
 
-AC_INIT([Clp],[1.16],[coin-clp@lists.coin-or.org])
+AC_INIT([Clp],[1.16.6],[coin-clp@lists.coin-or.org])
 
 AC_COPYRIGHT([
 Copyright 2006 International Business Machines and others.

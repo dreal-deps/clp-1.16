@@ -2,7 +2,7 @@
 # All Rights Reserved.
 # This file is distributed under the Eclipse Public License.
 
-## $Id: configure.ac 3364 2015-01-18 18:11:06Z tkr $
+## $Id: configure.ac 3457 2015-02-08 00:41:40Z tkr $
 
 # Author:  Andreas Waechter            IBM    2009-04-20
 
@@ -12,7 +12,7 @@
 
 AC_PREREQ(2.59)
 
-AC_INIT([ThirdPartyMetis],[1.3],[http://projects.coin-or.org/BuildTools/newticket])
+AC_INIT([ThirdPartyMetis],[1.3.2],[http://projects.coin-or.org/BuildTools/newticket])
 
 AC_COPYRIGHT([
 Copyright 2009 International Business Machines and others.
@@ -30,7 +30,7 @@ AC_CONFIG_SRCDIR(metis-4.0/Lib/balance.c)
 # /usr/local.
 AC_PREFIX_DEFAULT([`pwd`])
 
-AC_COIN_PROJECTDIR_INIT(Metis)
+AC_COIN_PROJECTDIR_INIT(Metis,4:2:3)
 
 #############################################################################
 #                         Standard build tool stuff                         #
