@@ -1,4 +1,4 @@
-/* $Id: CbcOrClpParam.cpp 2079 2015-01-05 13:11:35Z forrest $ */
+/* $Id: CbcOrClpParam.cpp 2148 2015-06-22 16:14:57Z tkr $ */
 // Copyright (C) 2002, International Business Machines
 // Corporation and others.  All Rights Reserved.
 // This code is licensed under the terms of the Eclipse Public License (EPL).
@@ -48,7 +48,7 @@ static char coin_prompt[] = "Clp:";
 #include "AbcCommon.hpp"
 #endif
 static bool doPrinting = true;
-std::string afterEquals = "";
+static std::string afterEquals = "";
 static char printArray[200];
 #if COIN_INT_MAX==0
 #undef COIN_INT_MAX

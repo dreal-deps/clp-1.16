@@ -2,7 +2,7 @@
 # All Rights Reserved.
 # This file is distributed under the Eclipse Public License.
 #
-## $Id: coin.m4 3479 2015-03-19 04:49:11Z tkr $
+## $Id: coin.m4 3519 2015-07-26 14:56:11Z stefan $
 #
 # Author: Andreas Wachter    IBM      2006-04-14
 
@@ -532,7 +532,7 @@ if test x"$MPICXX" = x; then :; else
   CXX="$MPICXX"
 fi
 
-# correct the LD variable in a build with MS or intel compiler
+# correct the LD variable in a build with MS or Intel-windows compiler
 case "$CXX" in
   clang* ) ;;
   cl* | */cl* | CL* | */CL* | icl* | */icl* | ICL* | */ICL*)
@@ -1129,10 +1129,14 @@ if test x"$MPIF77" = x; then :; else
 fi
 
 # correct the LD variable if we use the intel fortran compiler in windows
-case "$F77" in
-  ifort* | */ifort* | IFORT* | */IFORT*)
-    LD=link
-    ;;
+case $build in
+  *-cygwin* | *-mingw*)
+    case "$F77" in
+      ifort* | */ifort* | IFORT* | */IFORT*)
+        LD=link
+      ;;
+    esac
+  ;;
 esac
 
 AC_LANG_POP([Fortran 77])
